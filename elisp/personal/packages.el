@@ -199,6 +199,15 @@
 ;; org mode
 (use-package org
   :init
+  (setq org-todo-keyword-faces
+      '(
+        ("MAYBE" . (:foreground "blue" :weight bold))
+        ("STARTED" . (:foreground "yellow" :weight bold))
+        ("DEFERRED" . (:foreground "purple" :weight bold))
+        ("CANCELLED" . (:foreground "gray" :weight bold))
+        ))
+  (setq org-todo-keywords
+      '((sequence "TODO" "MAYBE" "STARTED" "|" "DONE" "DEFERRED" "CANCELLED")))
   (setq org-completion-use-ido t)
   (setq org-confirm-babel-evaluate nil)
   (setq org-hide-leading-stars t)
@@ -229,6 +238,7 @@
           ("\\.dhtml\\'"    . web-mode))
   :config
   (progn
+    (defvaralias 'web-mode-attr-indent-offset 'tab-width) ; set indent-level same as tab-width
     (defadvice web-mode-highlight-part (around tweak-jsx activate)
       (if (equal web-mode-content-type "jsx")
           (let ((web-mode-enable-part-face nil))
