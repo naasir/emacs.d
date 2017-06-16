@@ -180,7 +180,9 @@
   :mode ("\\.js[x]?$" . js2-mode)
   :interpreter ("node" . js2-mode)
   :config
-  (defvaralias 'js2-basic-offset 'tab-width)) ; set indent-level same as tab-width
+  (progn
+    (defvaralias 'js2-basic-offset 'tab-width) ; set indent-level same as tab-width
+    (defvaralias 'js2-show-parse-errors nil))) ; disable parse errors as this conflicts with flycheck
 
 ;; json mode
 (use-package json-mode
@@ -280,6 +282,14 @@
                             emacs-lisp-checkdoc
                             json-jsonlist)))))
 
+;; flycheck interface to Flow, a static type checker for Javascript
+(use-package flycheck-flow
+  :ensure t
+  :config
+  (progn
+    (flycheck-add-mode 'javascript-flow 'web-mode)
+    (flycheck-add-next-checker 'javascript-flow 'javascript-eslint)))
+
 ;------------------------------
 ; utilities
 ;------------------------------
@@ -352,7 +362,11 @@
 (use-package pt
   :ensure t
   :if (executable-find "pt")
-  :bind ("M-?" . projectile-pt))
+  :bind ("M-?" . projectile-pt)
+  :config
+  (progn
+    (setq pt-arguments
+          (list "--smart-case" "--hidden")))) ; search hidden files (i.e. dotfiles) too
 
 ;; editable  grep
 (use-package wgrep
