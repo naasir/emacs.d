@@ -16,4 +16,5 @@
 ; Work source code uses tabs instead of spaces
 ;------------------------------
 ; NOTE: Backquote syntax, see: http://emacswiki.org/emacs/BackquoteSyntax
-(add-to-list 'auto-minor-mode-alist `(,(expand-file-name "~/code/main/")  . tabs-mode))
+; NOTE (08-19-2019): Commented out as Redfin switched to 2 spaces for JS
+;; (add-to-list 'auto-minor-mode-alist `(,(expand-file-name "~/code/main/")  . tabs-mode))

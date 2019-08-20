@@ -29,12 +29,12 @@
 ;------------------------------
 ; NOTE: setup-cygwin not installed via use-package
 ; as no package exists. Must be installed locally.
-(use-package cygwin-mount
-  :ensure t
-  :config
-  (progn
-    (when (memq system-type '(windows-nt))
-      (require 'setup-cygwin))))
+;; (use-package cygwin-mount
+;;   :ensure t
+;;   :config
+;;   (progn
+;;     (when (memq system-type '(windows-nt))
+;;       (require 'setup-cygwin))))
 
 ;------------------------------
 ; console
@@ -81,8 +81,6 @@
   :bind ("M-y" . browse-kill-ring))
 
 ;; color theme
-(use-package color-theme)
-
 (use-package atom-one-dark-theme
   :ensure t
   :config (load-theme 'atom-one-dark t))
@@ -93,6 +91,7 @@
   :init
   (progn
     (drag-stuff-global-mode t)
+    (drag-stuff-define-keys)
     (add-to-list 'drag-stuff-except-modes 'org-mode 'drag-stuff-mode)))
 
 ;; interactive do
@@ -181,7 +180,7 @@
   :interpreter ("node" . js2-mode)
   :config
   (progn
-    (defvaralias 'js2-basic-offset 'tab-width) ; set indent-level same as tab-width
+    (setq js2-basic-offset tab-width) ; set indent-level same as tab-width
     (defvaralias 'js2-show-parse-errors nil))) ; disable parse errors as this conflicts with flycheck
 
 ;; json mode
@@ -203,13 +202,14 @@
   :init
   (setq org-todo-keyword-faces
       '(
-        ("MAYBE" . (:foreground "blue" :weight bold))
+        ("MAYBE" . (:foreground "gray" :weight bold))
         ("STARTED" . (:foreground "yellow" :weight bold))
-        ("DEFERRED" . (:foreground "purple" :weight bold))
-        ("CANCELLED" . (:foreground "gray" :weight bold))
+        ("POSTPONED" . (:foreground "orange" :weight bold))
+        ("CANCELLED" . (:foreground "brown" :weight bold))
+        ("FAILED" . (:foreground "red" :weight bold))
         ))
   (setq org-todo-keywords
-      '((sequence "TODO" "MAYBE" "STARTED" "|" "DONE" "DEFERRED" "CANCELLED")))
+      '((sequence "TODO" "MAYBE" "STARTED" "|" "DONE" "POSTPONED" "CANCELLED" "FAILED")))
   (setq org-completion-use-ido t)
   (setq org-confirm-babel-evaluate nil)
   (setq org-hide-leading-stars t)
@@ -220,8 +220,10 @@
   (setq org-startup-truncated nil))
 
 ;; scala major mode
-(use-package scala-mode2
-  :ensure t)
+(use-package scala-mode
+  :ensure t
+  :interpreter
+  ("scala" . scala-mode))
 
 ;; sbt major mode
 (use-package sbt-mode
@@ -257,7 +259,6 @@
   :ensure t
   :init
   (progn
-    (use-package yasnippets)
     (yas-global-mode 1)
     (setq-default yas/prompt-functions '(yas/ido-prompt))))
 
@@ -295,6 +296,7 @@
 ;------------------------------
 
 ;; easy pg
+;; @NOTE: gpg from homebrew wouldn't work, so installed gpgtools instead
 (use-package epa-file)
 
 ;; ediff
@@ -346,6 +348,8 @@
 ;; project interaction library
 (use-package projectile
   :ensure t
+  :bind (("s-p" . projectile-command-map)
+         ("C-c p"  . projectile-command-map))
   :diminish projectile-mode
   :init
   (setq projectile-enable-caching t)
